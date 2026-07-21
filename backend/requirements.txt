@@ -1,0 +1,8 @@
+fastapi
+uvicorn
+uuid
+typing
+pydantic
+pyjwt
+jwt
+pymongo
