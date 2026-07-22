@@ -5,7 +5,6 @@ typing
 pydantic
 email-validator
 pyjwt
-jwt
 pymongo
 pytest
 sqlalchemy
