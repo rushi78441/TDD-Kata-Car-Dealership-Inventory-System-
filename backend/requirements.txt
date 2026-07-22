@@ -6,3 +6,13 @@ pydantic
 pyjwt
 jwt
 pymongo
+pytest
+sqlalchemy
+psycopg2-binary
+alembic
+pydantic-settings
+bcrypt
+slowapi
+httpx
+pytest-asyncio
+asyncpg
