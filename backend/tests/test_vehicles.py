@@ -24,7 +24,7 @@ async def admin_auth_headers(client):
 
 
 @pytest.mark.asyncio
-async def test_create_vehicle_success(client, admin_auth_headers):
+async def test_should_create_vehicle_success(client, admin_auth_headers):
     """
     Test that an admin can successfully add a vehicle.
     """
@@ -47,3 +47,40 @@ async def test_create_vehicle_success(client, admin_auth_headers):
     assert data["model"] == "Camry"
     assert data["quantity"] == 10
     assert "id" in data
+    
+    
+@pytest.mark.asyncio
+async def test_should_get_allvehicles_list(client, admin_auth_headers):
+    """
+    Test that retrieves all available vehicles in inventory
+    """
+    # Pre populate two vehicles in inventory
+    v1 = {
+        "make": "Honda",
+        "model": "Civic",
+        "category": "Sedan",
+        "price": 22000.0,
+        "quantity": 5
+    }
+    v2 = {
+        "make": "Ford",
+        "model": "F-150",
+        "category": "Truck",
+        "price": 38000.0,
+        "quantity": 3
+    }
+    
+    await client.post("/api/vehicles", json = v1, headers= admin_auth_headers)
+    await client.post("/api/vehicles", json = v2, headers = admin_auth_headers)
+    
+    # ACT : Fetch all vehicles from inventory
+    response = await client.get("/api/vehicles")
+    
+    # Assert
+    assert response.status_code == 200
+    data = response.json()
+    assert len(data) == 2 
+    assert data[0]["make"] == "Honda"
+    assert data[1]["make"] == "Ford"
+    assert "id" in data[0]
+    assert "id" in data[1]
