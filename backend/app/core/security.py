@@ -29,7 +29,7 @@ def create_access_token(data : dict) -> str:
     ## Calculate expire timestanp
     expire = datetime.now(timezone.utc) + timedelta(minutes = settings.ACCESS_TOKEN_EXPIRE_MINUTES)
     
-    ## # 'sub' (subject) represents the unique identifier, 'exp' represents the expiration claim
+    ## # 'sub' (subject) represponseents the unique identifier, 'exp' represponseents the expiration claim
     to_encode.update({"exp" : expire})
     
     encoded_jwt = jwt.encode(to_encode, key = settings.SECRET_KEY, algorithm = settings.ALGORITHM)

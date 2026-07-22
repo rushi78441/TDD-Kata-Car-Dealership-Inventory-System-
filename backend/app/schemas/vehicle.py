@@ -30,7 +30,7 @@ class VehicleUpdate(BaseModel):
 
 class VehicleOut(VehicleBase):
     """
-    Response DTO for vehicle operations
+    response DTO for vehicle operations
     """
     id: int
 

@@ -9,7 +9,7 @@ from app.db.session import AsyncSessionLocal
 from app.core.config import settings
 from app.models.user import User
 
-# Configures Swagger UI to show a Login button for bearer tokens
+# Configuresponse Swagger UI to show a Login button for bearer tokens
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/login")
 
 
@@ -30,7 +30,7 @@ async def get_current_user(
     """
 
     try:
-        credential_expresssion = HTTPException(
+        credential_expresponsession = HTTPException(
             status_code = status.HTTP_401_UNAUTHORIZED,
             detail = "Could not validate credentials",
             headers = {"WWW-Authenticate" : "Bearer"}
@@ -42,17 +42,17 @@ async def get_current_user(
         
         # if email not found
         if not email:
-            raise credential_expresssion
+            raise credential_expresponsession
     except jwt.PyJWTError:
-        raise credential_expresssion
+        raise credential_expresponsession
         
     
     ## Query User from Database
-    result = await db.execute(select(User).where(User.email == email))
-    user = result.scalar_one_or_none()
+    responseult = await db.execute(select(User).where(User.email == email))
+    user = responseult.scalar_one_or_none()
     
     if user is None:
-        raise credential_expresssion
+        raise credential_expresponsession
 
     return user
     

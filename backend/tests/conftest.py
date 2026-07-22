@@ -24,7 +24,7 @@ TestingSessionLocal = async_sessionmaker(
 @pytest_asyncio.fixture(scope = "function")
 async def db_session():
     """
-    Fixture to create a fresh set of tables per test and clean up afterwards.
+    Fixture to create a fresponseh set of tables per test and clean up afterwards.
     """
     
     async with test_engine.begin() as conn:

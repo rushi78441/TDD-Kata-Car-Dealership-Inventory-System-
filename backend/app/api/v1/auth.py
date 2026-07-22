@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
-from app.schemas.auth import UserCreate, UserLogin, UserOut, TokenResponse
+from app.schemas.auth import UserCreate, UserLogin, UserOut, Tokenresponse
 from app.models.user import User
 from app.core.security import get_hash_password, verify_password, create_access_token
 from app.api.dependencies import get_db
@@ -17,8 +17,8 @@ async def register(user: UserCreate, db: AsyncSession = Depends(get_db)):
     Route Successfully Register User if not duplicated
     """
     # Check if email is already registered
-    result = await db.execute(select(User).where(User.email == user.email))
-    duplicate_user = result.scalar_one_or_none()
+    responseult = await db.execute(select(User).where(User.email == user.email))
+    duplicate_user = responseult.scalar_one_or_none()
     
     if duplicate_user:
         raise HTTPException(status_code=400, detail="Email already registered")
@@ -37,7 +37,7 @@ async def register(user: UserCreate, db: AsyncSession = Depends(get_db)):
     await db.refresh(user)
     return user
 
-@auth_router.post("/login" , response_model = TokenResponse)
+@auth_router.post("/login" , response_model = Tokenresponse)
 async def login(payload : UserLogin, db: AsyncSession = Depends(get_db)):
     ## check the user exists in db
     response = await db.execute(select(User).where(User.email == payload.email))

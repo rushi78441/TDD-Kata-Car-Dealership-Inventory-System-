@@ -80,8 +80,8 @@ async def update_vehicle(
     """
     Update details of an existing vehicle (Admin only).
     """
-    result = await db.execute(select(Vehicle).where(Vehicle.id == vehicle_id))
-    vehicle = result.scalars().first()
+    responseult = await db.execute(select(Vehicle).where(Vehicle.id == vehicle_id))
+    vehicle = responseult.scalars().first()
 
     if not vehicle:
         raise HTTPException(
@@ -108,8 +108,8 @@ async def delete_vehicle(
     """
     Delete a vehicle from inventory (Admin only).
     """
-    result = await db.execute(select(Vehicle).where(Vehicle.id == vehicle_id))
-    vehicle = result.scalars().first()
+    responseult = await db.execute(select(Vehicle).where(Vehicle.id == vehicle_id))
+    vehicle = responseult.scalars().first()
     
     if not vehicle:
         raise HTTPException(
