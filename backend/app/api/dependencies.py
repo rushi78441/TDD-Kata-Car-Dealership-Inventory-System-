@@ -10,7 +10,7 @@ from app.core.config import settings
 from app.models.user import User
 
 # Configuresponse Swagger UI to show a Login button for bearer tokens
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/login")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl = "/api/auth/login")
 
 
 async def get_db() -> AsyncGenerator[AsyncSession, None]:
@@ -48,7 +48,7 @@ async def get_current_user(
         
     
     ## Query User from Database
-    responseult = await db.execute(select(User).where(User.email == email))
+    responseult = await db.execute(select(User).where(User.email  ==  email))
     user = responseult.scalar_one_or_none()
     
     if user is None:
@@ -62,7 +62,7 @@ async def require_admin(current_user: User = Depends(get_current_user)) -> User:
     Enforce Role -based Access Control (RBAC) -- Admin only
     """
     
-    if current_user.role != "admin":
+    if current_user.role !=  "admin":
         raise HTTPException(
             status_code = status.HTTP_403_FORBIDDEN,
             detail = "Admin access required" 

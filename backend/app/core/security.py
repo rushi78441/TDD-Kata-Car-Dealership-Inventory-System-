@@ -9,7 +9,7 @@ def get_hash_password(password : str) -> str:
     Function that generates Hashed Password
     """
     salt = bcrypt.gensalt()
-    hashed_password = bcrypt.hashpw(password= password.encode('utf-8'), salt=salt)
+    hashed_password = bcrypt.hashpw(password =  password.encode('utf-8'), salt = salt)
     return hashed_password.decode('utf-8')
 
 def verify_password(plain_password : str, hashed_password : str) -> bool:

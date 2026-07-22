@@ -12,8 +12,8 @@ from app.api.dependencies import get_db
 ## Engine Using Dedicated Databse URL
 test_engine = create_async_engine(
     settings.TEST_DATABASE_URL,
-    echo=False,
-    poolclass=NullPool,
+    echo = False,
+    poolclass = NullPool,
 )
 TestingSessionLocal = async_sessionmaker(
     bind = test_engine,
@@ -47,7 +47,7 @@ async def client(db_session):
         
     app.dependency_overrides[get_db] = override_get_db
     
-    async with AsyncClient(transport= ASGITransport(app=app) , base_url = "http://test") as ac:
+    async with AsyncClient(transport =  ASGITransport(app = app) , base_url = "http://test") as ac:
         yield ac
         
     app.dependency_overrides.clear()

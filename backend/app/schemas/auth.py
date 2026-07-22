@@ -23,8 +23,8 @@ class UserOut(BaseModel):
     User Logout Validation Schema
     """
     id : uuid.UUID = Field(
-        validation_alias="user_id",
-        serialization_alias="id",
+        validation_alias = "user_id",
+        serialization_alias = "id",
     )
     email : EmailStr
     role : str

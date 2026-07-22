@@ -9,7 +9,7 @@ from typing import Optional
 vehicle_router = APIRouter()
 
 
-@vehicle_router.post("", response_model=VehicleOut, status_code=status.HTTP_201_CREATED)
+@vehicle_router.post("", response_model = VehicleOut, status_code = status.HTTP_201_CREATED)
 async def create_vehicle(
     vehicle_in: VehicleCreate,
     db: AsyncSession = Depends(get_db),
@@ -38,9 +38,9 @@ async def get_all_vehicles(
     return response.scalars()
 
 
-@vehicle_router.get("/search", response_model=list[VehicleOut])
+@vehicle_router.get("/search", response_model = list[VehicleOut])
 async def search_vehicles(
-    make: Optional[str] = None,
+    brand: Optional[str] = None,
     model: Optional[str] = None,
     category: Optional[str] = None,
     min_price: Optional[float] = None,
@@ -48,20 +48,20 @@ async def search_vehicles(
     db: AsyncSession = Depends(get_db)
 ):
     """
-    Search for vehicles by make, model, catgory, or price range
+    Search for vehicles by brand, model, catgory, or price range
     """
     query = select(Vehicle)
 
-    if make:
-        query = query.where(Vehicle.make.ilike(f"%{make}%"))
+    if brand:
+        query = query.where(Vehicle.brand.ilike(f"%{brand}%"))
     if model:
         query = query.where(Vehicle.model.ilike(f"%{model}%"))
     if category:
         query = query.where(Vehicle.category.ilike(f"%{category}%"))
     if min_price is not None:
-        query = query.where(Vehicle.price >= min_price)
+        query = query.where(Vehicle.price >=  min_price)
     if max_price is not None:
-        query = query.where(Vehicle.price <= max_price)
+        query = query.where(Vehicle.price <=  max_price)
         
     response = await db.execute(query) 
     return response.scalars()
@@ -70,7 +70,7 @@ async def search_vehicles(
 from fastapi import HTTPException
 
 
-@vehicle_router.put("/{vehicle_id}", response_model=VehicleOut)
+@vehicle_router.put("/{vehicle_id}", response_model = VehicleOut)
 async def update_vehicle(
     vehicle_id: int,
     vehicle_in: VehicleUpdate,
@@ -80,17 +80,17 @@ async def update_vehicle(
     """
     Update details of an existing vehicle (Admin only).
     """
-    responseult = await db.execute(select(Vehicle).where(Vehicle.id == vehicle_id))
+    responseult = await db.execute(select(Vehicle).where(Vehicle.id  ==  vehicle_id))
     vehicle = responseult.scalars().first()
 
     if not vehicle:
         raise HTTPException(
-            status_code=404,
-            detail="Vehicle not found"
+            status_code = 404,
+            detail = "Vehicle not found"
         )
 
     # Update only provided fields
-    update_data = vehicle_in.model_dump(exclude_unset=True)
+    update_data = vehicle_in.model_dump(exclude_unset = True)
     for field, value in update_data.items():
         setattr(vehicle, field, value)
 
@@ -108,13 +108,13 @@ async def delete_vehicle(
     """
     Delete a vehicle from inventory (Admin only).
     """
-    responseult = await db.execute(select(Vehicle).where(Vehicle.id == vehicle_id))
+    responseult = await db.execute(select(Vehicle).where(Vehicle.id  ==  vehicle_id))
     vehicle = responseult.scalars().first()
     
     if not vehicle:
         raise HTTPException(
-            status_code=404,
-            detail="Vehicle not found"
+            status_code = 404,
+            detail = "Vehicle not found"
         )
 
     await db.delete(vehicle)

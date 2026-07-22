@@ -14,7 +14,7 @@ app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 # App Routers inclusion
-app.include_router(auth_router, prefix="/api/auth", tags=["auth"])
+app.include_router(auth_router, prefix = "/api/auth", tags = ["auth"])
 app.include_router(vehicle_router, prefix = "/api/vehicles", tags = ["Vehicles"])
 app.include_router(inventory_router, prefix = "/api/vehicles", tags = ["Inventory"])
 

@@ -3,11 +3,11 @@ from pydantic import BaseModel, Field, ConfigDict
 
 
 class VehicleBase(BaseModel):
-    make: str
+    brand: str
     model: str
     category: str
-    price: float = Field(..., gt=0, description="Price must be greater than 0")
-    quantity: int = Field(..., ge=0, description="Quantity cannot be negative")
+    price: float = Field(..., gt = 0, description = "Price must be greater than 0")
+    quantity: int = Field(..., ge = 0, description = "Quantity cannot be negative")
 
 
 class VehicleCreate(VehicleBase):
@@ -21,11 +21,11 @@ class VehicleUpdate(BaseModel):
     """
     Payload for PUT /api/vehicles/:id (All fields optional for updates)
     """
-    make: Optional[str] = None
+    brand: Optional[str] = None
     model: Optional[str] = None
     category: Optional[str] = None
-    price: Optional[float] = Field(default=None, gt=0)
-    quantity: Optional[int] = Field(default=None, ge=0)
+    price: Optional[float] = Field(default = None, gt = 0)
+    quantity: Optional[int] = Field(default = None, ge = 0)
 
 
 class VehicleOut(VehicleBase):
@@ -34,4 +34,4 @@ class VehicleOut(VehicleBase):
     """
     id: int
 
-    model_config = ConfigDict(from_attributes=True) 
+    model_config = ConfigDict(from_attributes = True) 
