@@ -50,7 +50,7 @@ async def test_should_create_vehicle_success(client, admin_auth_headers):
     
     
 @pytest.mark.asyncio
-async def test_should_get_allvehicles_list(client, admin_auth_headers):
+async def test_should_get_all_vehicles_list(client, admin_auth_headers):
     """
     Test that retrieves all available vehicles in inventory
     """
@@ -87,7 +87,7 @@ async def test_should_get_allvehicles_list(client, admin_auth_headers):
     
     
 @pytest.mark.asyncio
-async def test_search_vehicles_by_query_params(client, admin_auth_headers):
+async def test_should_able_to_search_vehicles_by_query_params(client, admin_auth_headers):
     """
     Test searching vehicles by make, category, and price range.
     """
@@ -112,3 +112,46 @@ async def test_search_vehicles_by_query_params(client, admin_auth_headers):
     data2 = res2.json()
     assert len(data2) == 1
     assert data2[0]["model"] == "RAV4"
+    
+    
+@pytest.mark.asyncio
+async def test_should_update_vehicle_successfully(client, admin_auth_headers):
+    """
+    Test updating details of an existing vehicle.
+    """
+    
+    # populate a vehicle
+    v_payload = {"make": "Honda", "model": "Civic", "category": "Sedan", "price": 22000.0, "quantity": 5}
+    create_res = await client.post("/api/vehicles", json=v_payload, headers=admin_auth_headers)
+    vehicle_id = create_res.json()["id"]
+
+    # Update price and quantity
+    update_payload = {"price": 23500.0, "quantity": 8}
+    res = await client.put(f"/api/vehicles/{vehicle_id}", json=update_payload, headers=admin_auth_headers)
+
+    assert res.status_code == 200
+    data = res.json()
+    assert data["price"] == 23500.0
+    assert data["quantity"] == 8
+    assert data["make"] == "Honda"  # Unchanged field remains intact
+
+
+@pytest.mark.asyncio
+async def test_should_delete_vehicle_successfully(client, admin_auth_headers):
+    """
+    Test deleting a vehicle from inventory (Admin only).
+    """
+    
+    # populate a vehicle
+    v_payload = {"make": "Ford", "model": "Focus", "category": "Hatchback", "price": 18000.0, "quantity": 2}
+    create_res = await client.post("/api/vehicles", json=v_payload, headers=admin_auth_headers)
+    vehicle_id = create_res.json()["id"]
+
+    # Delete vehicle
+    delete_res = await client.delete(f"/api/vehicles/{vehicle_id}", headers=admin_auth_headers)
+    assert delete_res.status_code == 200
+    assert delete_res.json()["message"] == "Vehicle deleted successfully"
+
+    # Confirm it no longer exists
+    list_res = await client.get("/api/vehicles")
+    assert not any(v["id"] == vehicle_id for v in list_res.json())

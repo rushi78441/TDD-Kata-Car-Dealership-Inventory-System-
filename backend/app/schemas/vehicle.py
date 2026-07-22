@@ -26,7 +26,6 @@ class VehicleUpdate(BaseModel):
     category: Optional[str] = None
     price: Optional[float] = Field(default=None, gt=0)
     quantity: Optional[int] = Field(default=None, ge=0)
-    id : int
 
 
 class VehicleOut(VehicleBase):
