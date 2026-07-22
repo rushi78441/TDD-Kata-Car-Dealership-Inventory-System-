@@ -45,3 +45,52 @@ async def test_register_duplicate_email_fails(client):
     assert response.status_code == 400
     
     
+@pytest.mark.asyncio
+async def test_should_successfully_login_user(client):
+    """
+    Test successful user login and JWT token retrieval.
+    """
+    # First, register the user
+    reg_payload = {
+        "email": "jane@example.com",
+        "password": "mypassword123",
+        "role": "customer"
+    }
+    await client.post("/api/auth/register", json=reg_payload)
+
+    # Attempt login
+    login_payload = {
+        "email": "jane@example.com",
+        "password": "mypassword123"
+    }
+    response = await client.post("/api/auth/login", json=login_payload)
+    
+    assert response.status_code == 200
+    data = response.json()
+    assert "access_token" in data
+    assert data["token_type"] == "Bearer"
+
+
+@pytest.mark.asyncio
+async def test_should_fail_login_with_wrong_password(client):
+    """
+    Test login failure with incorrect password.
+    """
+    
+    # First, register
+    registration_payload = {
+        "email": "user@example.com",
+        "password": "correctpassword123",
+        "role": "customer"
+    }
+    await client.post("/api/auth/register", json=registration_payload)
+
+    # Login with wrong password
+    login_payload = {
+        "email": "user@example.com",
+        "password": "wrongpassword123"
+    }
+    response = await client.post("/api/auth/login", json=login_payload)
+    assert response.status_code == 401
+    
+    
