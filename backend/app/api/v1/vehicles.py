@@ -4,6 +4,7 @@ from sqlalchemy import select
 from app.schemas.vehicle import VehicleCreate, VehicleOut
 from app.models.vehicle import Vehicle
 from app.api.dependencies import get_db, require_admin
+from typing import Optional
 
 vehicle_router = APIRouter()
 
@@ -35,4 +36,34 @@ async def get_all_vehicles(
     """
     response = await db.execute(select(Vehicle).offset(skip).limit(limit))
     return response.scalars()
+
+
+@vehicle_router.get("/search", response_model=list[VehicleOut])
+async def search_vehicles(
+    make: Optional[str] = None,
+    model: Optional[str] = None,
+    category: Optional[str] = None,
+    min_price: Optional[float] = None,
+    max_price: Optional[float] = None,
+    db: AsyncSession = Depends(get_db)
+):
+    """
+    Search for vehicles by make, model, catgory, or price range
+    """
+    query = select(Vehicle)
+
+    if make:
+        query = query.where(Vehicle.make.ilike(f"%{make}%"))
+    if model:
+        query = query.where(Vehicle.model.ilike(f"%{model}%"))
+    if category:
+        query = query.where(Vehicle.category.ilike(f"%{category}%"))
+    if min_price is not None:
+        query = query.where(Vehicle.price >= min_price)
+    if max_price is not None:
+        query = query.where(Vehicle.price <= max_price)
+        
+    response = await db.execute(query) 
+    return response.scalars()
+    
     

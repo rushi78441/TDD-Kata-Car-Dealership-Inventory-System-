@@ -84,3 +84,31 @@ async def test_should_get_allvehicles_list(client, admin_auth_headers):
     assert data[1]["make"] == "Ford"
     assert "id" in data[0]
     assert "id" in data[1]
+    
+    
+@pytest.mark.asyncio
+async def test_search_vehicles_by_query_params(client, admin_auth_headers):
+    """
+    Test searching vehicles by make, category, and price range.
+    """
+    # pre populate 3 different vehicles
+    v1 = {"make": "Toyota", "model": "Corolla", "category": "Sedan", "price": 20000.0, "quantity": 5}
+    v2 = {"make": "Toyota", "model": "RAV4", "category": "SUV", "price": 32000.0, "quantity": 4}
+    v3 = {"make": "BMW", "model": "X5", "category": "SUV", "price": 65000.0, "quantity": 2}
+
+    await client.post("/api/vehicles", json=v1, headers=admin_auth_headers)
+    await client.post("/api/vehicles", json=v2, headers=admin_auth_headers)
+    await client.post("/api/vehicles", json=v3, headers=admin_auth_headers)
+
+    # Search method 1: Filter by make=Toyota (should return Corolla & RAV4)
+    res1 = await client.get("/api/vehicles/search?make=Toyota")
+    assert res1.status_code == 200
+    data1 = res1.json()
+    assert len(data1) == 2
+
+    # Search method 2: Filter by category=SUV and price max_price=40000 (should return RAV4 only)
+    res2 = await client.get("/api/vehicles/search?category=SUV&max_price=40000")
+    assert res2.status_code == 200
+    data2 = res2.json()
+    assert len(data2) == 1
+    assert data2[0]["model"] == "RAV4"
