@@ -49,10 +49,12 @@ async def get_current_user(
     
     ## Query User from Database
     result = await db.execute(select(User).where(User.email == email))
-    user = result.scalar().first()
+    user = result.scalar_one_or_none()
     
     if user is None:
         raise credential_expresssion
+
+    return user
     
     
 async def require_admin(current_user: User = Depends(get_current_user)) -> User:

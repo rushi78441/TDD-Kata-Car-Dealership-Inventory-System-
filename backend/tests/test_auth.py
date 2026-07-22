@@ -23,7 +23,7 @@ async def test_should_register_user_successfully(client):
     
     
 @pytest.mark.asyncio
-async def test_register_duplicate_email_fails(client):
+async def test_should_not_register_duplicate_email(client):
     """
     Test that registering an existing email returns 400.
     """
@@ -52,7 +52,7 @@ async def test_should_successfully_login_user(client):
     """
     # First, register the user
     reg_payload = {
-        "email": "jane@example.com",
+        "email": "user@example.com",
         "password": "mypassword123",
         "role": "customer"
     }
@@ -60,7 +60,7 @@ async def test_should_successfully_login_user(client):
 
     # Attempt login
     login_payload = {
-        "email": "jane@example.com",
+        "email": "user@example.com",
         "password": "mypassword123"
     }
     response = await client.post("/api/auth/login", json=login_payload)
