@@ -35,12 +35,15 @@ app.include_router(inventory_router, prefix = "/api/vehicles", tags = ["Inventor
 app.add_middleware(SlowAPIMiddleware)
 
 origins = [
-    "http://localhost:5173"
+    "http://localhost:5173",
+    "http://localhost:3000",
+    "http://localhost:4173",
 ]
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
+    allow_origin_regex=r"https://.*\.vercel\.app",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
