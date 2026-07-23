@@ -1,18 +1,23 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Request, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
-from app.schemas.auth import UserCreate, UserLogin, UserOut, Tokenresponse
+from app.schemas.auth import UserCreate, UserLogin, UserOut, TokenResponse
 from app.models.user import User
 from app.core.security import get_hash_password, verify_password, create_access_token
 from app.api.dependencies import get_db
-
+from app.core.rate_limiter import limiter
 
 auth_router = APIRouter()
 
 # Auth Registration Route
 @auth_router.post("/register", response_model = UserOut, status_code = status.HTTP_201_CREATED)
-async def register(user: UserCreate, db: AsyncSession = Depends(get_db)):
+@limiter.limit("5/minute")
+async def register(
+    request: Request,
+    user: UserCreate,
+    db: AsyncSession = Depends(get_db)
+):
     """
     Route Successfully Register User if not duplicated
     """
@@ -37,8 +42,13 @@ async def register(user: UserCreate, db: AsyncSession = Depends(get_db)):
     await db.refresh(user)
     return user
 
-@auth_router.post("/login" , response_model = Tokenresponse)
-async def login(payload : UserLogin, db: AsyncSession = Depends(get_db)):
+@auth_router.post("/login" , response_model = TokenResponse)
+@limiter.limit("5/minute")
+async def login(
+    request: Request,
+    payload: UserLogin,
+    db: AsyncSession = Depends(get_db)
+):
     ## check the user exists in db
     response = await db.execute(select(User).where(User.email  ==  payload.email))
     user = response.scalar_one_or_none()

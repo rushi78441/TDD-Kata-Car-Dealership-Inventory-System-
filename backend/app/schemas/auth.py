@@ -31,7 +31,7 @@ class UserOut(BaseModel):
 
     model_config = {"from_attributes": True}
     
-class Tokenresponse(BaseModel):
+class TokenResponse(BaseModel):
     """
     Token response Validation schema
     """

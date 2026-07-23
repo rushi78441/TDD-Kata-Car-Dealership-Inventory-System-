@@ -8,6 +8,9 @@ from app.db.base import Base
 from app.core.config import settings
 from app.main import app
 from app.api.dependencies import get_db
+from app.core.rate_limiter import limiter
+
+limiter.enabled = False
 
 ## Engine Using Dedicated Databse URL
 test_engine = create_async_engine(

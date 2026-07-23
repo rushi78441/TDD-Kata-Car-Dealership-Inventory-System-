@@ -1,3 +1,8 @@
 {
-    "python-envs.defaultEnvManager": "ms-python.python:system"
+    "python-envs.defaultEnvManager": "ms-python.python:venv",
+    "python.defaultInterpreterPath": "/mnt/Storage/Placements/Incubyte (Full Stack Devops Role)/Placement Rounds/TDD KATA Car Dealership Inverntory System/backend/venv/bin/python",
+    "python.analysis.extraPaths": [
+        "/mnt/Storage/Placements/Incubyte (Full Stack Devops Role)/Placement Rounds/TDD KATA Car Dealership Inverntory System/backend/venv/lib/python3.13/site-packages",
+        "/mnt/Storage/Placements/Incubyte (Full Stack Devops Role)/Placement Rounds/TDD KATA Car Dealership Inverntory System/backend"
+    ]
 }
