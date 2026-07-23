@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import Shell from './components/Shell'
-import { AUTH_STORAGE_KEY } from './lib/api.jsx'
+import { AUTH_STORAGE_KEY } from './lib/api'
 import AdminPage from './pages/AdminPage'
 import CatalogPage from './pages/CatalogPage'
 import LoginPage from './pages/LoginPage'
