@@ -1,4 +1,4 @@
-# 🏎️ TDD-Kata-Car-Dealership-Inventory-System-# 
+<img width="1579" height="932" alt="image" src="https://github.com/user-attachments/assets/caf08073-aa2f-4122-b231-22a6d0f793a1" /># 🏎️ TDD-Kata-Car-Dealership-Inventory-System-# 
 
 A full-stack, enterprise-grade Car Dealership Inventory Management System built following **Test-Driven Development (TDD)** principles. It features a high-performance **FastAPI** backend integrated with **SQLAlchemy (Async)** and **PostgreSQL**, alongside a modern **React (Vite)** single-page application enhanced with **Optimistic UI Updates** and **Tailwind CSS**.
 
@@ -50,12 +50,12 @@ Here is a visual walk-through of the Car Dealership Inventory System across publ
 #### 1. Main Inventory Catalog & Vehicle Search
 Browse vehicles, search across brands/models/categories, or filter by price ranges.
 
-![Public Catalog & Search](./screenshots/public-catalog.png)
 
 #### 2. User Authentication
 Clean login portal for customers and admins to sign in and unlock interactive permissions.
 
-![Login Screen](./screenshots/login.png)
+<img width="1601" height="807" alt="image" src="https://github.com/user-attachments/assets/005561ed-c84e-4d37-92b4-85a21f9f5776" />
+
 
 ---
 
@@ -64,7 +64,7 @@ Clean login portal for customers and admins to sign in and unlock interactive pe
 #### 3. Logged-in Customer View & Purchase Action
 Authenticated customers can purchase available vehicles with real-time stock updates.
 
-![Customer Catalog View](./screenshots/customer-view.png)
+<img width="1579" height="932" alt="image" src="https://github.com/user-attachments/assets/d3cc8de6-e73d-4b31-be71-6883801afdaf" />
 
 ---
 
@@ -73,26 +73,31 @@ Authenticated customers can purchase available vehicles with real-time stock upd
 #### 4. Admin Panel & Inventory Control
 Admins get full stock analytics, total inventory valuation, and tools to update, restock, or delete vehicles.
 
-![Admin Dashboard](./screenshots/admin-dashboard.png)
+<img width="1639" height="774" alt="image" src="https://github.com/user-attachments/assets/0fbfbd18-7b1d-4f59-9c2e-bec3ad1b93b2" />
+
 
 #### 5. Add New Vehicle Modal
 Modal form for adding new vehicle inventory with strict validation on stock and pricing.
 
-![Add Vehicle Modal](./screenshots/add-vehicle-modal.png)
+<img width="1105" height="784" alt="image" src="https://github.com/user-attachments/assets/c428c161-7379-4689-b51b-e590c671db56" />
+
 
 #### 6. User Profile Information
 Overview of authenticated user details, session state, role status, and JWT token metadata.
 
-![User Profile](./screenshots/user-profile.png)
+<img width="1593" height="565" alt="image" src="https://github.com/user-attachments/assets/d7de38a1-140e-468c-8c45-d266077d0004" />
+
 
 ---
 
-### ⚙️ Automated CI/CD Workflows
+### ⚙️ Automated CI Workflows
 
 #### 7. GitHub Actions CI Pipeline
 Automated TDD test suites, code verification, and deployment build pipelines running on every commit to `main`.
 
-![GitHub Actions Workflows](./screenshots/ci-workflows.png)
+<img width="1876" height="659" alt="image" src="https://github.com/user-attachments/assets/fd953dd7-8e52-4bf7-b87f-9b21620121a6" />
+<img width="1246" height="593" alt="image" src="https://github.com/user-attachments/assets/c21eb161-4b7b-4c8e-8c00-f2445c196b47" />
+
 
 ---
 
