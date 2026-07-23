@@ -1,3 +1,8 @@
+import sys
+import os
+# Add the 'backend' directory to the Python path so 'app' module can be resolved
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.api.v1.auth import auth_router
