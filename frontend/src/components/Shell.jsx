@@ -27,7 +27,7 @@ function Shell({ auth, onLogout }) {
     <header className="sticky top-0 z-40 border-b border-slate-200/60 bg-white/80 backdrop-blur-md transition-all duration-300">
       <div className="mx-auto flex w-full max-w-7xl flex-col gap-4 px-4 py-4 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8">
         <Link to="/" className="flex items-center gap-3 text-left group">
-          <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-slate-800 to-slate-950 text-sm font-bold text-white shadow-md transition-transform duration-300 group-hover:scale-105">
+          <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-linear-to-br from-slate-800 to-slate-950 text-sm font-bold text-white shadow-md transition-transform duration-300 group-hover:scale-105">
             CD
           </span>
           <span>

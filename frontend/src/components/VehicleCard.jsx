@@ -30,7 +30,7 @@ function VehicleCard({ vehicle, onPurchase }) {
       <div className="mt-6 flex items-end justify-between gap-4">
         <p className="text-2xl font-extrabold text-slate-900 tracking-tight">{formatCurrency(vehicle.price)}</p>
         <button
-          className="rounded-lg bg-gradient-to-r from-slate-900 to-slate-800 px-5 py-2.5 text-sm font-semibold text-white shadow-md transition-all duration-300 hover:from-slate-800 hover:to-slate-700 hover:shadow-lg active:scale-95 disabled:cursor-not-allowed disabled:from-slate-200 disabled:to-slate-200 disabled:text-slate-400 disabled:shadow-none"
+          className="rounded-lg bg-linear-to-r from-slate-900 to-slate-800 px-5 py-2.5 text-sm font-semibold text-white shadow-md transition-all duration-300 hover:from-slate-800 hover:to-slate-700 hover:shadow-lg active:scale-95 disabled:cursor-not-allowed disabled:from-slate-200 disabled:to-slate-200 disabled:text-slate-400 disabled:shadow-none"
           type="button"
           disabled={isOutOfStock}
           onClick={() => onPurchase(vehicle.id)}
