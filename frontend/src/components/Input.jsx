@@ -1,3 +1,13 @@
+/**
+ * Input Component
+ * 
+ * A reusable, styled input field component with a label.
+ * 
+ * @param {Object} props - Component properties.
+ * @param {string} props.label - The text label for the input field.
+ * @param {Object} [props...rest] - Any standard HTML input attributes (e.g., name, type, value).
+ * @returns {JSX.Element} The Input component.
+ */
 function Input({ label, ...props }) {
   return (
     <label className="block group">

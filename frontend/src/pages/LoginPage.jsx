@@ -2,8 +2,19 @@ import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import AuthCard from '../components/AuthCard'
 import Input from '../components/Input'
-import { apiRequest, decodeTokenPayload } from '../lib/api.jsx'
+import { apiRequest, decodeTokenPayload } from '../lib/api'
 
+/**
+ * LoginPage Component
+ * 
+ * Renders the login form for existing users.
+ * Handles authentication and updates the application's auth state.
+ * 
+ * @param {Object} props - Component properties.
+ * @param {Object|null} props.auth - The current user authentication object, if any.
+ * @param {Function} props.onLogin - Callback function triggered upon successful login.
+ * @returns {JSX.Element} The LoginPage component.
+ */
 function LoginPage({ auth, onLogin }) {
   const navigate = useNavigate()
   const [form, setForm] = useState({ email: '', password: '' })
@@ -14,6 +25,11 @@ function LoginPage({ auth, onLogin }) {
     if (auth) navigate('/')
   }, [auth, navigate])
 
+  /**
+   * Handles the submission of the login form.
+   * 
+   * @param {React.FormEvent<HTMLFormElement>} event - The form submission event.
+   */
   async function handleSubmit(event) {
     event.preventDefault()
     setLoading(true)

@@ -2,8 +2,19 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import AuthCard from '../components/AuthCard'
 import Input from '../components/Input'
-import { apiRequest, decodeTokenPayload } from '../lib/api.jsx'
+import { apiRequest, decodeTokenPayload } from '../lib/api'
 
+/**
+ * RegisterPage Component
+ * 
+ * Renders the registration form for new customers.
+ * Handles account creation, automatically logs the user in, and updates auth state.
+ * 
+ * @param {Object} props - Component properties.
+ * @param {Object|null} props.auth - The current user authentication object, if any.
+ * @param {Function} props.onLogin - Callback function triggered upon successful registration and login.
+ * @returns {JSX.Element} The RegisterPage component.
+ */
 function RegisterPage({ auth, onLogin }) {
   const navigate = useNavigate()
   const [form, setForm] = useState({ email: '', password: '' })
@@ -14,6 +25,11 @@ function RegisterPage({ auth, onLogin }) {
     if (auth) navigate('/')
   }, [auth, navigate])
 
+  /**
+   * Handles the submission of the registration form.
+   * 
+   * @param {React.FormEvent<HTMLFormElement>} event - The form submission event.
+   */
   async function handleSubmit(event) {
     event.preventDefault()
     setLoading(true)

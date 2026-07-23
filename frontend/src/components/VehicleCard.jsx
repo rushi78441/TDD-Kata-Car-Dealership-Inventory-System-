@@ -1,5 +1,16 @@
-import { formatCurrency } from '../lib/api.jsx'
+import { formatCurrency } from '../lib/api'
 
+/**
+ * VehicleCard Component
+ * 
+ * Displays individual vehicle details (brand, model, price, stock).
+ * Provides a purchase button for available vehicles.
+ * 
+ * @param {Object} props - Component properties.
+ * @param {Object} props.vehicle - The vehicle data object.
+ * @param {Function} props.onPurchase - Callback function triggered when purchase is initiated.
+ * @returns {JSX.Element} The VehicleCard component.
+ */
 function VehicleCard({ vehicle, onPurchase }) {
   const isOutOfStock = vehicle.quantity <= 0
 

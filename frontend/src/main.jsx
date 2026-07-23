@@ -4,6 +4,11 @@ import { BrowserRouter } from 'react-router-dom'
 import './index.css'
 import App from './App.jsx'
 
+/**
+ * Main application entry point.
+ * Bootstraps the React application by wrapping the App component with strict mode
+ * and a browser router for navigation.
+ */
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>

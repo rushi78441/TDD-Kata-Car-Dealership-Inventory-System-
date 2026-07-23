@@ -9,6 +9,12 @@ import ProfilePage from './pages/ProfilePage'
 import RegisterPage from './pages/RegisterPage'
 import './App.css'
 
+/**
+ * Retrieves the saved authentication object from local storage.
+ * Handles parsing errors by clearing the corrupted storage key.
+ * 
+ * @returns {Object|null} The saved authentication object, or null if not found/invalid.
+ */
 function getSavedAuth() {
   try {
     const savedAuth = localStorage.getItem(AUTH_STORAGE_KEY)
@@ -19,14 +25,30 @@ function getSavedAuth() {
   }
 }
 
+/**
+ * App Component
+ * 
+ * The root application component that sets up routing and global state (authentication).
+ * Manages the top-level layout (Shell) and page routes based on user role.
+ * 
+ * @returns {JSX.Element} The App component.
+ */
 function App() {
   const [auth, setAuth] = useState(getSavedAuth)
 
+  /**
+   * Updates the authentication state in React and local storage.
+   * 
+   * @param {Object} nextAuth - The new authentication object containing the token and user details.
+   */
   function saveAuth(nextAuth) {
     setAuth(nextAuth)
     localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(nextAuth))
   }
 
+  /**
+   * Clears the authentication state and removes it from local storage, logging the user out.
+   */
   function logout() {
     setAuth(null)
     localStorage.removeItem(AUTH_STORAGE_KEY)

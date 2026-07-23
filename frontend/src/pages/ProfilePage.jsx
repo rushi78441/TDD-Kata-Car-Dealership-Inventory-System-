@@ -1,6 +1,16 @@
 import { useEffect, useState } from 'react'
-import { getDisplayName, getSessionDuration } from '../lib/api.jsx'
+import { getDisplayName, getSessionDuration } from '../lib/api'
 
+/**
+ * ProfilePage Component
+ * 
+ * Displays the current user's profile information, including their role,
+ * email, and remaining session duration.
+ * 
+ * @param {Object} props - Component properties.
+ * @param {Object} props.auth - The current user authentication object.
+ * @returns {JSX.Element} The ProfilePage component.
+ */
 function ProfilePage({ auth }) {
   const [duration, setDuration] = useState(() => getSessionDuration(auth?.expiresAt))
   const displayName = getDisplayName(auth?.email)
@@ -45,6 +55,16 @@ function ProfilePage({ auth }) {
   )
 }
 
+/**
+ * ProfileField Component
+ * 
+ * A simple display component for a key-value pair in the profile section.
+ * 
+ * @param {Object} props - Component properties.
+ * @param {string} props.label - The label for the field.
+ * @param {string} [props.value] - The value to display.
+ * @returns {JSX.Element} The ProfileField component.
+ */
 function ProfileField({ label, value }) {
   return (
     <div className="rounded border border-slate-200 bg-slate-50 p-4">

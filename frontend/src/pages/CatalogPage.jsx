@@ -4,7 +4,7 @@ import Input from '../components/Input'
 import Notice from '../components/Notice'
 import Stat from '../components/Stat'
 import VehicleCard from '../components/VehicleCard'
-import { apiRequest, getDisplayName } from '../lib/api.jsx'
+import { apiRequest, getDisplayName } from '../lib/api'
 
 const emptyFilters = {
   brand: '',
@@ -14,6 +14,16 @@ const emptyFilters = {
   max_price: '',
 }
 
+/**
+ * CatalogPage Component
+ * 
+ * Displays the vehicle catalog for customers.
+ * Includes search and filtering capabilities, and allows logged-in customers to purchase vehicles.
+ * 
+ * @param {Object} props - Component properties.
+ * @param {Object} props.auth - Authentication object containing the user token and role.
+ * @returns {JSX.Element} The CatalogPage component.
+ */
 function CatalogPage({ auth }) {
   const navigate = useNavigate()
   const [vehicles, setVehicles] = useState([])
@@ -22,6 +32,11 @@ function CatalogPage({ auth }) {
   const [message, setMessage] = useState('')
   const [error, setError] = useState('')
 
+  /**
+   * Fetches vehicles from the API, optionally applying filters.
+   * 
+   * @param {Object} [nextFilters=filters] - The filters to apply to the search.
+   */
   async function loadVehicles(nextFilters = filters) {
     setLoading(true)
     setError('')
@@ -49,6 +64,12 @@ function CatalogPage({ auth }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  /**
+   * Handles the purchase of a vehicle.
+   * Redirects to the login page if the user is not authenticated.
+   * 
+   * @param {string} vehicleId - The ID of the vehicle to purchase.
+   */
   async function handlePurchase(vehicleId) {
     if (!auth) {
       navigate('/login')
@@ -69,10 +90,18 @@ function CatalogPage({ auth }) {
     }
   }
 
+  /**
+   * Updates the filter state when a filter input changes.
+   * 
+   * @param {React.ChangeEvent<HTMLInputElement>} event - The input change event.
+   */
   function handleFilterChange(event) {
     setFilters((current) => ({ ...current, [event.target.name]: event.target.value }))
   }
 
+  /**
+   * Clears all filters and reloads the full vehicle list.
+   */
   function clearFilters() {
     setFilters(emptyFilters)
     loadVehicles(emptyFilters)

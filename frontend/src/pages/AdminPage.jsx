@@ -2,8 +2,18 @@ import { useEffect, useState } from 'react'
 import Input from '../components/Input'
 import Notice from '../components/Notice'
 import Stat from '../components/Stat'
-import { apiRequest, emptyVehicle, formatCurrency } from '../lib/api.jsx'
+import { apiRequest, emptyVehicle, formatCurrency } from '../lib/api'
 
+/**
+ * AdminPage Component
+ * 
+ * Renders the admin panel for managing the vehicle inventory.
+ * Provides functionality to view, add, edit, delete, and restock vehicles.
+ * 
+ * @param {Object} props - Component properties.
+ * @param {Object} props.auth - Authentication object containing the user token.
+ * @returns {JSX.Element} The AdminPage component.
+ */
 function AdminPage({ auth }) {
   const [vehicles, setVehicles] = useState([])
   const [form, setForm] = useState(emptyVehicle)
@@ -15,6 +25,10 @@ function AdminPage({ auth }) {
 
   const authHeaders = { Authorization: `Bearer ${auth.token}` }
 
+  /**
+   * Fetches the latest list of vehicles from the API.
+   * Updates the `vehicles` state or sets an `error` if the request fails.
+   */
   async function loadVehicles() {
     try {
       setVehicles(await apiRequest('/api/vehicles'))
@@ -31,10 +45,22 @@ function AdminPage({ auth }) {
     return () => window.clearTimeout(fetchTimer)
   }, [])
 
+  /**
+   * Updates the form state when an input changes.
+   * 
+   * @param {React.ChangeEvent<HTMLInputElement>} event - The input change event.
+   */
   function updateForm(event) {
     setForm((current) => ({ ...current, [event.target.name]: event.target.value }))
   }
 
+  /**
+   * Formats the vehicle data for API submission.
+   * Ensures numerical fields are properly typed.
+   * 
+   * @param {Object} source - The raw vehicle data from the form.
+   * @returns {Object} The formatted vehicle payload.
+   */
   function vehiclePayload(source) {
     return {
       brand: source.brand,
@@ -45,6 +71,11 @@ function AdminPage({ auth }) {
     }
   }
 
+  /**
+   * Handles the submission of the vehicle form (both add and edit).
+   * 
+   * @param {React.FormEvent<HTMLFormElement>} event - The form submission event.
+   */
   async function handleSubmit(event) {
     event.preventDefault()
     setMessage('')
@@ -75,6 +106,11 @@ function AdminPage({ auth }) {
     }
   }
 
+  /**
+   * Opens the modal and populates the form for editing an existing vehicle.
+   * 
+   * @param {Object} vehicle - The vehicle object to edit.
+   */
   function startEdit(vehicle) {
     setEditingId(vehicle.id)
     setIsModalOpen(true)
@@ -87,6 +123,11 @@ function AdminPage({ auth }) {
     })
   }
 
+  /**
+   * Handles the deletion of a vehicle.
+   * 
+   * @param {string} vehicleId - The ID of the vehicle to delete.
+   */
   async function handleDelete(vehicleId) {
     setMessage('')
     setError('')
@@ -103,6 +144,11 @@ function AdminPage({ auth }) {
     }
   }
 
+  /**
+   * Handles restocking a specific vehicle by submitting the quantity.
+   * 
+   * @param {string} vehicleId - The ID of the vehicle to restock.
+   */
   async function handleRestock(vehicleId) {
     const quantity = Number(restock[vehicleId] || 0)
     if (quantity <= 0) {

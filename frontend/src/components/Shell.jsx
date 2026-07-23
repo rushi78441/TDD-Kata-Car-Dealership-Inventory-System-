@@ -1,9 +1,23 @@
 import { Link, useNavigate } from 'react-router-dom'
 
+/**
+ * Shell Component
+ * 
+ * Renders the main application navigation and header.
+ * Adapts links based on the user's authentication state and role.
+ * 
+ * @param {Object} props - Component properties.
+ * @param {Object} props.auth - The current user authentication object.
+ * @param {Function} props.onLogout - Callback function to handle user logout.
+ * @returns {JSX.Element} The Shell component.
+ */
 function Shell({ auth, onLogout }) {
   const navigate = useNavigate()
   const isAdmin = auth?.role === 'admin'
 
+  /**
+   * Handles the logout process and redirects to the login page.
+   */
   function handleLogout() {
     onLogout()
     navigate('/login')
