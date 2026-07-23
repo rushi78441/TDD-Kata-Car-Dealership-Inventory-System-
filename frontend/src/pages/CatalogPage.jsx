@@ -137,7 +137,7 @@ function CatalogPage({ auth }) {
           </p>
           {auth && (
             <p className="mt-4 text-sm font-semibold text-emerald-700">
-              Welcome {auth.role === 'admin' ? 'Admin' : 'Customer'} {getDisplayName(auth.email)}
+              Welcome {getDisplayName(auth.email)}
             </p>
           )}
           <h1 className="mt-3 text-4xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl text-transparent bg-clip-text bg-linear-to-br from-slate-900 to-slate-500">
