@@ -1,4 +1,4 @@
-<img width="1579" height="932" alt="image" src="https://github.com/user-attachments/assets/caf08073-aa2f-4122-b231-22a6d0f793a1" /># 🏎️ TDD-Kata-Car-Dealership-Inventory-System-# 
+# TDD-Kata-Car-Dealership-Inventory-System-# 
 
 A full-stack, enterprise-grade Car Dealership Inventory Management System built following **Test-Driven Development (TDD)** principles. It features a high-performance **FastAPI** backend integrated with **SQLAlchemy (Async)** and **PostgreSQL**, alongside a modern **React (Vite)** single-page application enhanced with **Optimistic UI Updates** and **Tailwind CSS**.
 
