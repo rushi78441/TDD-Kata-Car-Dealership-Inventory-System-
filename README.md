@@ -4,8 +4,20 @@ A full-stack, enterprise-grade Car Dealership Inventory Management System built 
 
 ---
 
-## 📋 Table of Contents
+## 🌐 Live Production Link & Admin Credentials
 
+* **Production App:** [https://tdd-car-dealership-inventory.vercel.app](https://tdd-car-dealership-inventory.vercel.app)
+
+### 🔑 Default Admin Account
+Use these credentials to access the admin panel and inventory management features:
+* **Email:** `admin@example.com`
+* **Password:** `adminpassword123`
+* **Role:** `admin`
+
+---
+
+## 📋 Table of Contents
+* [ 🌐 Live Production Link & Admin Credentials](#-live-production-link--admin-credentials)
 * [🏗️ Architecture & System Overview](#%EF%B8%8F-architecture--system-overview)
 * [📸 Application Screenshots & Workflows](#-application-screenshots--workflows)
   * [🚘 Public Views](#-public-views)
