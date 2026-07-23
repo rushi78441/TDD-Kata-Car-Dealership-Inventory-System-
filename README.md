@@ -4,6 +4,26 @@ A full-stack, enterprise-grade Car Dealership Inventory Management System built 
 
 ---
 
+## 📋 Table of Contents
+
+* [🏗️ Architecture & System Overview](#%EF%B8%8F-architecture--system-overview)
+* [📸 Application Screenshots & Workflows](#-application-screenshots--workflows)
+  * [🚘 Public Views](#-public-views)
+  * [👤 Customer Experience](#-customer-experience)
+  * [👑 Admin Capabilities](#-admin-capabilities)
+  * [⚙️ Automated CI Workflows](#%EF%B8%8F-automated-ci-workflows)
+* [🛠️ Tech Stack & Tools](#%EF%B8%8F-tech-stack--tools)
+* [📁 Repository Directory Structure](#-repository-directory-structure)
+* [⚡ Key Architectural Features & Patterns](#-key-architectural-features--patterns)
+* [📡 Backend API Endpoints & Specifications](#-backend-api-endpoints--specifications)
+* [🤖 My AI Usage](#-my-ai-usage)
+* [🐳 Dockerization Details](#-dockerization-details)
+* [🔄 CI Workflow Implementation (GitHub Actions)](#-ci-workflow-implementation-github-actions)
+* [🚀 Setup & Local Installation Guide](#-setup--local-installation-guide)
+* [🧪 Test Execution & TDD Coverage](#-test-execution--tdd-coverage)
+
+--- 
+
 ## 🏗️ Architecture & System Overview
 
 The system is designed with a decoupled, layer-based architecture separating domain models, API routing, business logic, and presentation layers.
