@@ -19,6 +19,7 @@ const emptyFilters = {
  * 
  * Displays the vehicle catalog for customers.
  * Includes search and filtering capabilities, and allows logged-in customers to purchase vehicles.
+ * Uses optimistic UI updates for instant purchase feedback.
  * 
  * @param {Object} props - Component properties.
  * @param {Object} props.auth - Authentication object containing the user token and role.
@@ -56,16 +57,12 @@ function CatalogPage({ auth }) {
   }
 
   useEffect(() => {
-    const fetchTimer = window.setTimeout(() => {
-      loadVehicles()
-    }, 0)
-
-    return () => window.clearTimeout(fetchTimer)
+    loadVehicles()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   /**
-   * Handles the purchase of a vehicle.
+   * Handles the purchase of a vehicle with Optimistic State Updates.
    * Redirects to the login page if the user is not authenticated.
    * 
    * @param {string} vehicleId - The ID of the vehicle to purchase.
@@ -78,15 +75,39 @@ function CatalogPage({ auth }) {
 
     setMessage('')
     setError('')
+
+    const previousVehicles = [...vehicles]
+
+    // 1. Optimistically decrement quantity in local state immediately
+    setVehicles((prevVehicles) =>
+      prevVehicles.map((v) => {
+        if (v.id === vehicleId) {
+          return { ...v, quantity: Math.max(0, v.quantity - 1) }
+        }
+        return v
+      })
+    )
+
+    // 2. Send API purchase request in the background
     try {
       const result = await apiRequest(`/api/vehicles/${vehicleId}/purchase`, {
         method: 'POST',
         headers: { Authorization: `Bearer ${auth.token}` },
       })
+
+      // Sync remaining stock directly with server response if needed
+      if (typeof result.quantity === 'number') {
+        setVehicles((prevVehicles) =>
+          prevVehicles.map((v) => (v.id === vehicleId ? { ...v, quantity: result.quantity } : v))
+        )
+      }
+
       setMessage(`${result.message}. Remaining stock: ${result.quantity}`)
-      loadVehicles()
     } catch (err) {
+      // Rollback to original state if purchase failed
+      setVehicles(previousVehicles)
       setError(err.message)
+      setMessage('')
     }
   }
 
@@ -111,7 +132,9 @@ function CatalogPage({ auth }) {
     <div className="space-y-8 pb-12">
       <section className="grid gap-8 border-b border-slate-200/60 pb-10 pt-4 lg:grid-cols-[1.2fr_0.8fr] lg:items-end animate-fade-in">
         <div className="animate-slide-up">
-          <p className="inline-block rounded-full bg-slate-900/5 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-slate-600 shadow-sm ring-1 ring-inset ring-slate-900/10">Inventory Catalog</p>
+          <p className="inline-block rounded-full bg-slate-900/5 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-slate-600 shadow-sm ring-1 ring-inset ring-slate-900/10">
+            Inventory Catalog
+          </p>
           {auth && (
             <p className="mt-4 text-sm font-semibold text-emerald-700">
               Welcome {auth.role === 'admin' ? 'Admin' : 'Customer'} {getDisplayName(auth.email)}
@@ -124,14 +147,20 @@ function CatalogPage({ auth }) {
             Browse our premium stock, filter by make or price, and purchase directly when signed in.
           </p>
         </div>
-        <div className="grid grid-cols-3 gap-3 rounded-2xl border border-white bg-white/60 p-4 text-center shadow-sm backdrop-blur-md animate-slide-up" style={{ animationDelay: '100ms' }}>
+        <div
+          className="grid grid-cols-3 gap-3 rounded-2xl border border-white bg-white/60 p-4 text-center shadow-sm backdrop-blur-md animate-slide-up"
+          style={{ animationDelay: '100ms' }}
+        >
           <Stat label="Vehicles" value={vehicles.length} />
           <Stat label="In Stock" value={vehicles.reduce((sum, vehicle) => sum + vehicle.quantity, 0)} />
           <Stat label="Admin" value={auth?.role === 'admin' ? 'Yes' : 'No'} />
         </div>
       </section>
 
-      <section className="rounded-xl border border-slate-200/60 bg-white/60 p-5 shadow-sm backdrop-blur-sm animate-fade-in" style={{ animationDelay: '200ms' }}>
+      <section
+        className="rounded-xl border border-slate-200/60 bg-white/60 p-5 shadow-sm backdrop-blur-sm animate-fade-in"
+        style={{ animationDelay: '200ms' }}
+      >
         <div className="grid gap-3 md:grid-cols-5">
           <Input label="Brand" name="brand" value={filters.brand} onChange={handleFilterChange} placeholder="e.g. Toyota" />
           <Input label="Model" name="model" value={filters.model} onChange={handleFilterChange} placeholder="e.g. Camry" />
@@ -140,10 +169,18 @@ function CatalogPage({ auth }) {
           <Input label="Max price" name="max_price" type="number" value={filters.max_price} onChange={handleFilterChange} placeholder="50000" />
         </div>
         <div className="mt-4 flex flex-wrap gap-2">
-          <button className="rounded-lg bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-slate-800 hover:shadow" type="button" onClick={() => loadVehicles()}>
+          <button
+            className="rounded-lg bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-slate-800 hover:shadow cursor-pointer"
+            type="button"
+            onClick={() => loadVehicles()}
+          >
             Search
           </button>
-          <button className="rounded-lg border border-slate-300/80 bg-white/50 px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition-all duration-200 hover:bg-slate-100 hover:text-slate-900" type="button" onClick={clearFilters}>
+          <button
+            className="rounded-lg border border-slate-300/80 bg-white/50 px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition-all duration-200 hover:bg-slate-100 hover:text-slate-900 cursor-pointer"
+            type="button"
+            onClick={clearFilters}
+          >
             Clear
           </button>
         </div>

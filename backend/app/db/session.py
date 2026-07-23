@@ -14,13 +14,16 @@ if "&pgbouncer=true" in db_url:
 engine = create_async_engine(
     db_url,
     echo=False,
-    pool_pre_ping=True,
+    pool_pre_ping=True,      # Checks if connection is alive before using it
+    pool_size=5,             # Limit connections per lambda instance
+    max_overflow=10,
     connect_args={
         "prepared_statement_name_func": lambda: "",
         "statement_cache_size": 0,
         "prepared_statement_cache_size": 0,
     }
 )
+
 
 AsyncSessionLocal = async_sessionmaker(
     bind=engine,

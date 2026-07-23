@@ -8,7 +8,7 @@ import { apiRequest, emptyVehicle, formatCurrency } from '../lib/api'
  * AdminPage Component
  * 
  * Renders the admin panel for managing the vehicle inventory.
- * Provides functionality to view, add, edit, delete, and restock vehicles.
+ * Provides functionality to view, add, edit, delete, and restock vehicles using optimistic UI updates.
  * 
  * @param {Object} props - Component properties.
  * @param {Object} props.auth - Authentication object containing the user token.
@@ -26,29 +26,23 @@ function AdminPage({ auth }) {
   const authHeaders = { Authorization: `Bearer ${auth.token}` }
 
   /**
-   * Fetches the latest list of vehicles from the API.
-   * Updates the `vehicles` state or sets an `error` if the request fails.
+   * Fetches the initial list of vehicles from the API on mount.
    */
   async function loadVehicles() {
     try {
-      setVehicles(await apiRequest('/api/vehicles'))
+      const data = await apiRequest('/api/vehicles')
+      setVehicles(data)
     } catch (err) {
       setError(err.message)
     }
   }
 
   useEffect(() => {
-    const fetchTimer = window.setTimeout(() => {
-      loadVehicles()
-    }, 0)
-
-    return () => window.clearTimeout(fetchTimer)
+    loadVehicles()
   }, [])
 
   /**
    * Updates the form state when an input changes.
-   * 
-   * @param {React.ChangeEvent<HTMLInputElement>} event - The input change event.
    */
   function updateForm(event) {
     setForm((current) => ({ ...current, [event.target.name]: event.target.value }))
@@ -56,10 +50,6 @@ function AdminPage({ auth }) {
 
   /**
    * Formats the vehicle data for API submission.
-   * Ensures numerical fields are properly typed.
-   * 
-   * @param {Object} source - The raw vehicle data from the form.
-   * @returns {Object} The formatted vehicle payload.
    */
   function vehiclePayload(source) {
     return {
@@ -72,44 +62,64 @@ function AdminPage({ auth }) {
   }
 
   /**
-   * Handles the submission of the vehicle form (both add and edit).
-   * 
-   * @param {React.FormEvent<HTMLFormElement>} event - The form submission event.
+   * Handles the submission of the vehicle form (both add and edit) optimistically.
    */
   async function handleSubmit(event) {
     event.preventDefault()
     setMessage('')
     setError('')
 
+    const payload = vehiclePayload(form)
+    const isEdit = Boolean(editingId)
+    const previousVehicles = [...vehicles]
+
+    // 1. Optimistic local UI update
+    if (isEdit) {
+      setVehicles((prev) =>
+        prev.map((v) => (v.id === editingId ? { ...v, ...payload } : v))
+      )
+      setMessage('Vehicle updated successfully.')
+    } else {
+      // Temporary ID for immediate rendering
+      const tempId = `temp-${Date.now()}`
+      setVehicles((prev) => [{ id: tempId, ...payload }, ...prev])
+      setMessage('Vehicle added successfully.')
+    }
+
+    // Close modal & reset form immediately
+    setIsModalOpen(false)
+    setForm(emptyVehicle)
+    setEditingId(null)
+
+    // 2. Perform API network request in background
     try {
-      if (editingId) {
+      if (isEdit) {
         await apiRequest(`/api/vehicles/${editingId}`, {
           method: 'PUT',
           headers: authHeaders,
-          body: JSON.stringify(vehiclePayload(form)),
+          body: JSON.stringify(payload),
         })
-        setMessage('Vehicle updated successfully.')
       } else {
-        await apiRequest('/api/vehicles', {
+        const createdVehicle = await apiRequest('/api/vehicles', {
           method: 'POST',
           headers: authHeaders,
-          body: JSON.stringify(vehiclePayload(form)),
+          body: JSON.stringify(payload),
         })
-        setMessage('Vehicle added successfully.')
+        // Replace temp ID with real ID returned by backend
+        setVehicles((prev) =>
+          prev.map((v) => (v.id.toString().startsWith('temp-') ? createdVehicle : v))
+        )
       }
-      setForm(emptyVehicle)
-      setEditingId(null)
-      setIsModalOpen(false)
-      loadVehicles()
     } catch (err) {
-      setError(err.message)
+      // Rollback state if server request fails
+      setVehicles(previousVehicles)
+      setError(`Failed to save changes: ${err.message}`)
+      setMessage('')
     }
   }
 
   /**
    * Opens the modal and populates the form for editing an existing vehicle.
-   * 
-   * @param {Object} vehicle - The vehicle object to edit.
    */
   function startEdit(vehicle) {
     setEditingId(vehicle.id)
@@ -124,30 +134,34 @@ function AdminPage({ auth }) {
   }
 
   /**
-   * Handles the deletion of a vehicle.
-   * 
-   * @param {string} vehicleId - The ID of the vehicle to delete.
+   * Handles the deletion of a vehicle optimistically.
    */
   async function handleDelete(vehicleId) {
     setMessage('')
     setError('')
 
+    const previousVehicles = [...vehicles]
+
+    // 1. Optimistically remove vehicle locally
+    setVehicles((prev) => prev.filter((v) => v.id !== vehicleId))
+    setMessage('Vehicle deleted successfully.')
+
+    // 2. Perform API request in background
     try {
       await apiRequest(`/api/vehicles/${vehicleId}`, {
         method: 'DELETE',
         headers: authHeaders,
       })
-      setMessage('Vehicle deleted successfully.')
-      loadVehicles()
     } catch (err) {
-      setError(err.message)
+      // Rollback state on failure
+      setVehicles(previousVehicles)
+      setError(`Failed to delete vehicle: ${err.message}`)
+      setMessage('')
     }
   }
 
   /**
-   * Handles restocking a specific vehicle by submitting the quantity.
-   * 
-   * @param {string} vehicleId - The ID of the vehicle to restock.
+   * Handles restocking a specific vehicle optimistically.
    */
   async function handleRestock(vehicleId) {
     const quantity = Number(restock[vehicleId] || 0)
@@ -159,16 +173,26 @@ function AdminPage({ auth }) {
     setMessage('')
     setError('')
 
+    const previousVehicles = [...vehicles]
+
+    // 1. Optimistically update local stock count
+    setVehicles((prev) =>
+      prev.map((v) => (v.id === vehicleId ? { ...v, quantity: v.quantity + quantity } : v))
+    )
+    setRestock((current) => ({ ...current, [vehicleId]: '' }))
+    setMessage('Vehicle restocked successfully.')
+
+    // 2. Perform API request in background
     try {
       await apiRequest(`/api/vehicles/${vehicleId}/restock?quantity=${quantity}`, {
         method: 'POST',
         headers: authHeaders,
       })
-      setRestock((current) => ({ ...current, [vehicleId]: '' }))
-      setMessage('Vehicle restocked successfully.')
-      loadVehicles()
     } catch (err) {
-      setError(err.message)
+      // Rollback state on failure
+      setVehicles(previousVehicles)
+      setError(`Failed to restock vehicle: ${err.message}`)
+      setMessage('')
     }
   }
 
@@ -199,12 +223,12 @@ function AdminPage({ auth }) {
               <Input label="Category" name="category" value={form.category} onChange={updateForm} placeholder="e.g. Sedan" required />
               <Input label="Price" name="price" type="number" min="1" value={form.price} onChange={updateForm} placeholder="e.g. 25000" required />
               <Input label="Quantity" name="quantity" type="number" min="0" value={form.quantity} onChange={updateForm} placeholder="e.g. 5" required />
-              <button className="w-full rounded bg-slate-900 px-4 py-3 text-sm font-semibold text-white hover:bg-slate-800" type="submit">
+              <button className="w-full rounded bg-slate-900 px-4 py-3 text-sm font-semibold text-white hover:bg-slate-800 transition-colors" type="submit">
                 {editingId ? 'Save changes' : 'Add vehicle'}
               </button>
               {editingId && (
                 <button
-                  className="w-full rounded border border-slate-300 px-4 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+                  className="w-full rounded border border-slate-300 px-4 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-colors"
                   type="button"
                   onClick={() => {
                     setIsModalOpen(false)
