@@ -1,7 +1,5 @@
 fastapi
 uvicorn
-uuid
-typing
 pydantic
 email-validator
 pyjwt
@@ -16,4 +14,3 @@ slowapi
 httpx
 pytest-asyncio
 asyncpg
-uuid
