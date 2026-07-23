@@ -43,6 +43,23 @@ async def test_should_not_register_duplicate_email(client):
     
     # Assert
     assert response.status_code  ==  400
+
+
+@pytest.mark.asyncio
+async def test_should_register_public_users_as_customer(client):
+    """
+    Test that public registration cannot self-assign admin privileges.
+    """
+    payload = {
+        "email": "notadmin@example.com",
+        "password": "password123",
+        "role": "admin"
+    }
+
+    response = await client.post("/api/auth/register", json = payload)
+
+    assert response.status_code  ==  201
+    assert response.json()["role"]  ==  "customer"
     
     
 @pytest.mark.asyncio

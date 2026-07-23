@@ -1,18 +1,21 @@
 import pytest
 import pytest_asyncio
+from app.core.security import get_hash_password
+from app.models.user import User
 
 
 @pytest_asyncio.fixture
-async def admin_auth_headers(client):
+async def admin_auth_headers(client, db_session):
     """
-    Helper fixture to register, login as an admin, and return bearer headers.
+    Helper fixture to seed, login as an admin, and return bearer headers.
     """
-    registration_payload = {
-        "email": "admin@example.com",
-        "password": "adminpassword123",
-        "role": "admin"
-    }
-    await client.post("/api/auth/register", json = registration_payload)
+    admin = User(
+        email = "admin@example.com",
+        hashed_password = get_hash_password("adminpassword123"),
+        role = "admin"
+    )
+    db_session.add(admin)
+    await db_session.commit()
     
     login_payload = {
         "email": "admin@example.com",

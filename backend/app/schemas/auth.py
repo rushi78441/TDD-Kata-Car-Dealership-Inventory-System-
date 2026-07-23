@@ -1,4 +1,5 @@
 from pydantic import BaseModel,EmailStr,Field
+from typing import Optional
 import uuid
 
 ## Auth Schemas for User Validation
@@ -9,7 +10,7 @@ class UserCreate(BaseModel):
     """
     email : EmailStr
     password : str = Field(max_length = 30)
-    role : str
+    role : Optional[str] = "customer"
     
 class UserLogin(BaseModel):
     """
