@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from fastapi.middleware import cors
+from fastapi.middleware.cors import CORSMiddleware
 from app.api.v1.auth import auth_router
 from app.api.v1.vehicles import vehicle_router
 from app.api.v1.inventory import inventory_router
@@ -33,6 +33,18 @@ app.include_router(inventory_router, prefix = "/api/vehicles", tags = ["Inventor
 
 # middlewares
 app.add_middleware(SlowAPIMiddleware)
+
+origins = [
+    "http://localhost:5173"
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/")
 async def root():

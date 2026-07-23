@@ -79,40 +79,42 @@ function CatalogPage({ auth }) {
   }
 
   return (
-    <div className="space-y-6">
-      <section className="grid gap-4 border-b border-slate-200 pb-6 lg:grid-cols-[1.2fr_0.8fr] lg:items-end">
-        <div>
-          <p className="text-sm font-semibold uppercase tracking-wide text-slate-500">Inventory</p>
+    <div className="space-y-8 pb-12">
+      <section className="grid gap-8 border-b border-slate-200/60 pb-10 pt-4 lg:grid-cols-[1.2fr_0.8fr] lg:items-end animate-fade-in">
+        <div className="animate-slide-up">
+          <p className="inline-block rounded-full bg-slate-900/5 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-slate-600 shadow-sm ring-1 ring-inset ring-slate-900/10">Inventory Catalog</p>
           {auth && (
-            <p className="mt-2 text-sm font-semibold text-emerald-700">
+            <p className="mt-4 text-sm font-semibold text-emerald-700">
               Welcome {auth.role === 'admin' ? 'Admin' : 'Customer'} {getDisplayName(auth.email)}
             </p>
           )}
-          <h1 className="mt-2 text-3xl font-bold text-slate-950 sm:text-4xl">Find available vehicles</h1>
-          <p className="mt-3 max-w-2xl text-slate-600">
-            Browse stock, filter by make or price, and purchase directly when signed in.
+          <h1 className="mt-3 text-4xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl text-transparent bg-clip-text bg-gradient-to-br from-slate-900 to-slate-500">
+            Find your perfect vehicle.
+          </h1>
+          <p className="mt-4 max-w-2xl text-lg text-slate-600 leading-relaxed">
+            Browse our premium stock, filter by make or price, and purchase directly when signed in.
           </p>
         </div>
-        <div className="grid grid-cols-3 gap-3 rounded border border-slate-200 bg-white p-4 text-center">
+        <div className="grid grid-cols-3 gap-3 rounded-2xl border border-white bg-white/60 p-4 text-center shadow-sm backdrop-blur-md animate-slide-up" style={{ animationDelay: '100ms' }}>
           <Stat label="Vehicles" value={vehicles.length} />
           <Stat label="In Stock" value={vehicles.reduce((sum, vehicle) => sum + vehicle.quantity, 0)} />
           <Stat label="Admin" value={auth?.role === 'admin' ? 'Yes' : 'No'} />
         </div>
       </section>
 
-      <section className="rounded border border-slate-200 bg-white p-4">
+      <section className="rounded-xl border border-slate-200/60 bg-white/60 p-5 shadow-sm backdrop-blur-sm animate-fade-in" style={{ animationDelay: '200ms' }}>
         <div className="grid gap-3 md:grid-cols-5">
-          <Input label="Brand" name="brand" value={filters.brand} onChange={handleFilterChange} />
-          <Input label="Model" name="model" value={filters.model} onChange={handleFilterChange} />
-          <Input label="Category" name="category" value={filters.category} onChange={handleFilterChange} />
-          <Input label="Min price" name="min_price" type="number" value={filters.min_price} onChange={handleFilterChange} />
-          <Input label="Max price" name="max_price" type="number" value={filters.max_price} onChange={handleFilterChange} />
+          <Input label="Brand" name="brand" value={filters.brand} onChange={handleFilterChange} placeholder="e.g. Toyota" />
+          <Input label="Model" name="model" value={filters.model} onChange={handleFilterChange} placeholder="e.g. Camry" />
+          <Input label="Category" name="category" value={filters.category} onChange={handleFilterChange} placeholder="e.g. Sedan" />
+          <Input label="Min price" name="min_price" type="number" value={filters.min_price} onChange={handleFilterChange} placeholder="10000" />
+          <Input label="Max price" name="max_price" type="number" value={filters.max_price} onChange={handleFilterChange} placeholder="50000" />
         </div>
         <div className="mt-4 flex flex-wrap gap-2">
-          <button className="rounded bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800" type="button" onClick={() => loadVehicles()}>
+          <button className="rounded-lg bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-slate-800 hover:shadow" type="button" onClick={() => loadVehicles()}>
             Search
           </button>
-          <button className="rounded border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50" type="button" onClick={clearFilters}>
+          <button className="rounded-lg border border-slate-300/80 bg-white/50 px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition-all duration-200 hover:bg-slate-100 hover:text-slate-900" type="button" onClick={clearFilters}>
             Clear
           </button>
         </div>
@@ -125,7 +127,7 @@ function CatalogPage({ auth }) {
       ) : vehicles.length === 0 ? (
         <div className="rounded border border-slate-200 bg-white p-8 text-center text-slate-500">No vehicles found.</div>
       ) : (
-        <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+        <section className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
           {vehicles.map((vehicle) => (
             <VehicleCard key={vehicle.id} vehicle={vehicle} onPurchase={handlePurchase} />
           ))}
